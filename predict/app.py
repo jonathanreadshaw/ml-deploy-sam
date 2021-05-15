@@ -1,7 +1,11 @@
 import json
 import joblib
 import logging
+import warnings
 import numpy as np
+
+# Prevent multiprocessing warning in AWS logs
+warnings.filterwarnings(action='ignore')
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
