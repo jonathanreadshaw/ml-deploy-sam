@@ -54,7 +54,7 @@ def lambda_handler(event, context):
         prediction = model_pipeline.predict(features)
         prediction_payload = {
             "class_label": str(prediction[0]),
-            "class_name": target_names.get(prediction[0])
+            "class_name": target_names.get(str(prediction[0]))
         }
         return {
             "statusCode": 200,
