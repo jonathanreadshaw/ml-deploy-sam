@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  ml-deploy-sam
+
+  Sample SAM Template for ml-deploy-sam
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  MLPredictFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /predict
+            Method: post
+    Metadata:
+      DockerTag: python3.7-v1
+      DockerContext: ./predict
+      Dockerfile: Dockerfile
+
+Outputs:
+  MLPredictApi:
+    Description: "API Gateway endpoint URL for Prod stage for MLPredict function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/predict/"
+  MLPredictFunction:
+    Description: "ML Prediction Lambda Function ARN"
+    Value: !GetAtt MLPredictFunction.Arn
+  MLPredictFunctionIamRole:
+    Description: "Implicit IAM Role created for MLPredict function"
+    Value: !GetAtt MLPredictFunctionRole.Arn
