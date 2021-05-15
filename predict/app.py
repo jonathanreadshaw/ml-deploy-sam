@@ -10,6 +10,12 @@ warnings.filterwarnings(action='ignore')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+target_names = {
+    "0": "setosa",
+    "1": "versicolor",
+    "2": "virginica"
+}
+
 # Load model from file on lambda boot
 model_pipeline = joblib.load('model_pipeline.joblib')
 
@@ -38,7 +44,7 @@ def lambda_handler(event, context):
             "statusCode": 400,
             "body": json.dumps(
                 {
-                    "message": "Invalid request. Received {} parameters, expected 4.".format(features.shape[1]),
+                    "message": "Invalid request. Received {} parameters, expected 4".format(features.shape[1]),
                 }
             ),
         }
@@ -46,11 +52,16 @@ def lambda_handler(event, context):
     # Calculate prediction
     try:
         prediction = model_pipeline.predict(features)
+        prediction_payload = {
+            "class_label": str(prediction[0]),
+            "class_name": target_names.get(prediction[0])
+        }
         return {
             "statusCode": 200,
             "body": json.dumps(
                 {
-                    "prediction": str(prediction[0]),
+                    "message": "Success",
+                    "prediction": json.dumps(prediction_payload)
                 }
             ),
         }
@@ -61,7 +72,7 @@ def lambda_handler(event, context):
             "statusCode": 500,
             "body": json.dumps(
                 {
-                    "message": "Unhandled error.",
+                    "message": "Unhandled error",
                 }
             ),
         }
