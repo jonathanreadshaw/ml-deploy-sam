@@ -61,7 +61,7 @@ def lambda_handler(event, context):
             "body": json.dumps(
                 {
                     "message": "Success",
-                    "prediction": json.dumps(prediction_payload)
+                    "prediction": prediction_payload
                 }
             ),
         }
